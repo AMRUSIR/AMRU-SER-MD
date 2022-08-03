@@ -5988,7 +5988,7 @@ reply(mess.wait)
 emote(q, "10")
 break
 
-case 'emojimix': {
+case 'emix': {
 	   if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!q) reply(`*Example :* ${prefix + command} 🦄+🤣`)
@@ -6000,7 +6000,7 @@ await fs.unlinkSync(encmedia)
 }
 }
 break
-	case 'toimage': case 'toimg': {
+	case 'image': case 'toimg': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!m.quoted) return reply('Reply Image')
@@ -6017,7 +6017,7 @@ fs.unlinkSync(ran)
 })
 }
 break
-case 'tomp4': case 'tovideo': {
+case 'mp4': case 'tovideo': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!m.quoted) return reply('Reply Image')
@@ -6042,7 +6042,7 @@ let audio = await toAudio(media, 'mp4')
 AMRUSIR.sendMessage(m.chat, {audio: audio, mimetype: 'audio/mpeg'}, { quoted : m })
 }
 break
-case 'tomp3': {
+case 'mp3': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (/document/.test(mime)) return reply(`Send/Reply Video/Audio You Want To Convert Into MP3 With Caption ${prefix + command}`)
@@ -6264,7 +6264,7 @@ case 'ig2': case 'igdl2': case 'instagram2': {
             }).catch((err) => reply(mess.error))
             }		
 			break
-case 'igdl': case 'instagram': case 'instagramreels': case 'igreels': {
+case 'igdl': case 'insta': case 'instagramreels': case 'igreels': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!args[0]) return reply(`Example :\n${prefix + command} https://www.instagram.com/p/CcvJGuxh9VI/?igshid=YmMyMTA2M2Y=`)
