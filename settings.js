@@ -73,10 +73,10 @@ global.packname = "AMRU\n\n\n\n\n\n\n\n\n\n\n😈😈😈 " //ur sticker waterma
 global.author = "AMRU-SER-MD" //ur sticker watermark author
 
 //Bot theme media
-global.thum = fs.readFileSync("./XeonMedia/theme/Amrumd.jpg") //ur thumb pic
-global.log0 = fs.readFileSync("./XeonMedia/theme/Amrumd.jpg") //ur logo pic
-global.err4r = fs.readFileSync("./XeonMedia/theme/Amrumd.jpg") //ur error pic
-global.thumb = fs.readFileSync("./XeonMedia/theme/Amrumd.jpg") //ur thumb pic
+global.thum = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur thumb pic
+global.log0 = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur logo pic
+global.err4r = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur error pic
+global.thumb = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur thumb pic
 
 //damtabase
 global.premium = ['916909137213'] //ur premium numbers
