@@ -1,12 +1,8 @@
 
-
-<h1 align="center">ꪶ𝗖𝗵𝗲𝗲𝗺𝘀 𝗕𝗼𝘁-𝗠𝗗 𝗩4ꫂ<br></h1>
-<p align="center">
-<img src="" alt="animated" width="540" height="280" />
-</p>
+# AMRUSER-MD
 
 <p align="center">
-Cheems Bot Multi Device is a automated whatsapp bot created by <a href="https://github.com/DGXeon" target="_blank">Xeon</a> using <a href="https://github.com/adiwajshing/Baileys" target="_blank">Baileys</a> and <a href="https://github.com/nodejs" target="_blank">Nodejs</a>. Dont forget to give a star bro.
+AMRU-SER Bot Multi Device is a automated whatsapp bot created by <a href="https://github.com/AMRUSIR" target="_blank">AMRU</a> using <a href="https://github.com/adiwajshing/Baileys" target="_blank">Baileys</a> and <a href="https://github.com/nodejs" target="_blank">Nodejs</a>. Dont forget to give a star 🍭.
 </p>
 
 <p align="center">
@@ -38,13 +34,6 @@ Cheems Bot Multi Device is a automated whatsapp bot created by <a href="https://
 <a href="https://youtube.com/channel/UCvAo9TZ0Pw9vrJ_0WYRyO3A"><img src="https://img.shields.io/badge/Subscribe Xeon-ff0000?style=for-the-badge&logo=youtube&logoColor=ff000000&link=https://www.youtube.com/c/BOTINDO" /><br>
 </p>
 
-## ```Donate Me```
-
-- [`FamPay`](https://telegra.ph/file/8737b098fd5702daeb7e0.jpg)
-
-<p align="left">
-Scan qr code from the above button, u can pay through GooglePay, Paytm, PhonePe and FamPay.
-</p>
 
 ## ```Bot Support Groups```
 
