@@ -21,733 +21,127 @@
 //thank you🦄
 //════════════════════════════//
 
-require('./settings')
-const { default: AMRUSIRConnect, useSingleFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@adiwajshing/baileys")
-const { state, saveState } = useSingleFileAuthState(`./${sessionName}.json`)
-const pino = require('pino')
-const { Boom } = require('@hapi/boom')
 const fs = require('fs')
-const yargs = require('yargs/yargs')
 const chalk = require('chalk')
-const FileType = require('file-type')
-const path = require('path')
-const PhoneNumber = require('awesome-phonenumber')
-const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/exif')
-const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, await, sleep } = require('./lib/myfunc')
-const moment = require('moment-timezone')
 
-var low
-try {
-  low = require('lowdb')
-} catch (e) {
-  low = require('./lib/lowdb')
+//Api Website\\
+global.APIs = {
+	zenz: 'https://zenzapis.xyz',
 }
 
-const { Low, JSONFile } = low
-const mongoDB = require('./lib/mongoDB')
-
-global.api = (name, path = '/', query = {}, apikeyqueryname) => (name in global.APIs ? global.APIs[name] : name) + path + (query || apikeyqueryname ? '?' + new URLSearchParams(Object.entries({ ...query, ...(apikeyqueryname ? { [apikeyqueryname]: global.APIKeys[name in global.APIs ? global.APIs[name] : name] } : {}) })) : '')
-
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
-
-global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-global.db = new Low(
-  /https?:\/\//.test(opts['db'] || '') ?
-    new cloudDBAdapter(opts['db']) : /mongodb/.test(opts['db']) ?
-      new mongoDB(opts['db']) :
-      new JSONFile(`database/database.json`)
-)
-global.db.data = {
-    users: {},
-    chats: {},
-    database: {},
-    game: {},
-    settings: {},
-    others: {},
-    sticker: {},
-    ...(global.db.data || {})
+//Api Key\\
+global.APIKeys = {
+	'https://zenzapis.xyz': 'your key',
 }
 
-// save database every 30seconds
-if (global.db) setInterval(async () => {
-    if (global.db.data) await global.db.write()
-  }, 30 * 1000)
 
-async function startAMRUSIR() {
-    const AMRUSIR = AMRUSIRConnect({
-        logger: pino({ level: 'silent' }),
-        printQRInTerminal: true,
-        browser: ['Subscribe Xeon','Safari','1.0.0'],
-        auth: state
-    })
+//aumto functioner
+global.autoTyping = false //auto tying in gc (true to on, false to off)
+global.autoreadpmngc = false //auto reading in gc and pm (true to on, false to off)
+global.autoReadGc = false //auto reading in gc (true to on, false to off)
+global.autoRecord = false //auto recording (true to on, false to off)
+global.available = true //auto available (true to on, false to off)
 
-    store.bind(AMRUSIR.ev)
-    
-    // anticall auto block
-    AMRUSIR.ws.on('CB:call', async (json) => {
-    const callerId = json.content[0].attrs['call-creator']
-    if (json.content[0].tag == 'offer') {
-    let xeonfek = await AMRUSIR.sendContact(callerId, global.owner)
-    AMRUSIR.sendMessage(callerId, { text: `Automatic Block System!\nDon't Call Bot!\nPlease Ask Or Contact The Owner To Unblock You!`}, { quoted : xeonfek })
-    await sleep(8000)
-    await AMRUSIR.updateBlockStatus(callerId, "block")
-    }
-    })
+//semt menu variants
+global.vidmenu = fs.readFileSync("./XeonMedia/theme/Cheems-bot.mp4") //gif and video menu
 
-    AMRUSIR.ev.on('messages.upsert', async chatUpdate => {
-        //console.log(JSON.stringify(chatUpdate, undefined, 2))
-        try {
-        mek = chatUpdate.messages[0]
-        if (!mek.message) return
-        mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-        if (mek.key && mek.key.remoteJid === 'status@broadcast') return
-        if (!AMRUSIR.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
-        if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
-        m = smsg(AMRUSIR, mek, store)
-        require("./XeonCheems4")(AMRUSIR, m, chatUpdate, store)
-        } catch (err) {
-            console.log(err)
-        }
-    })
-    
-    // Group Update
-    AMRUSIR.ev.on('groups.update', async pea => {
-       //console.log(pea)
-    // Get Profile Picture Group
-       try {
-       ppgc = await AMRUSIR.profilePictureUrl(pea[0].id, 'image')
-       } catch {
-       ppgc = 'https://shortlink.AMRUSIRarridho.my.id/rg1oT'
-       }
-       let lolXeon = { url : ppgc }
-       if (pea[0].announce == true) {
-       AMRUSIR.send5ButImg(pea[0].id, `「 Group Settings Changed 」\n\nThe Group Has Been Closed By Admin, Now Only Admin Can Send Messages !`, `${botname}`, lolXeon, [])
-       } else if(pea[0].announce == false) {
-       AMRUSIR.send5ButImg(pea[0].id, `「 Group Settings Changed 」\n\nThe Group Has Been Opened By Admin, Now Participants Can Send Messages !`, `${botname}`, lolXeon, [])
-       } else if (pea[0].restrict == true) {
-       AMRUSIR.send5ButImg(pea[0].id, `「 Group Settings Changed 」\n\nGroup Info Has Been Restricted, Now Only Admin Can Edit Group Info !`, `${botname}`, lolXeon, [])
-       } else if (pea[0].restrict == false) {
-       AMRUSIR.send5ButImg(pea[0].id, `「 Group Settings Changed 」\n\nGroup Info Has Been Opened, Now Participants Can Edit Group Info !`, `${botname}`, lolXeon, [])
-       } else {
-       AMRUSIR.send5ButImg(pea[0].id, `「 Group Settings Changed 」\n\nGroup Subject Has Been Changed To *${pea[0].subject}*`, `${botname}`, lolXeon, [])
-     }
-    })
-    
-    //randoming function
-function pickRandom(list) {
-return list[Math.floor(list.length * Math.random())]
+//documents variants
+global.doc1 = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+global.doc2 = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+global.doc3 = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+global.doc4 = 'application/zip'
+global.doc5 = 'application/pdf'
+global.doc6 = 'application/vnd.android.package-archive'
+
+//owmner v card
+global.vcardowner = ['916909137213'] //ur owner number
+global.ownername = "🦄Dream Guy Xeon" //ur owner name
+global.ytname = "YT: Xeon" //ur yt chanel name
+global.socialm = "GitHub: DGXeon" //ur github or insta name
+global.location = "India, Mizoram, Aizawl" //ur location
+
+//bot bomdy 
+global.owner = ['916909137213']
+global.ownertag = '916909137213' //ur tag number
+global.botname = 'Cheems Bot MD V4' //ur bot name
+global.linkz = "https://youtu.be/WiIqCdiDjFo" //your theme url which will be displayed on whatsapp
+global.websitex = "https://youtu.be/WiIqCdiDjFo" //ur website to be displayed
+global.botscript = 'https://github.com/DGXeon/CheemsBot-MD4' //script link
+global.reactmoji = "😘" //ur menu react emoji
+global.themeemoji = "🦄" //ur theme emoji
+global.packname = "Cheems Bot Stickers\n\n\n\n\n\n\n\n\n\n\n🦄🦄🦄 " //ur sticker watermark packname
+global.author = "🦄Dream Guy Xeon" //ur sticker watermark author
+
+//Bot theme media
+global.thum = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur thumb pic
+global.log0 = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur logo pic
+global.err4r = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur error pic
+global.thumb = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur thumb pic
+
+//damtabase
+global.premium = ['916909137213'] //ur premium numbers
+global.ntilinkytvid = []
+global.ntilinkytch = []
+global.ntilinkig = []
+global.ntilinkfb = []
+global.ntilinktg = []
+global.ntilinktt = []
+global.ntilinktwt = []
+global.ntilinkall = []
+global.nticall = []
+global.ntwame = []
+global.nttoxic = []
+global.ntnsfw = []
+global.ntvirtex = []
+global.rkyt = []
+global.wlcm = []
+global.gcrevoke = []
+global.autorep = []
+global.ntilink = []
+
+//omther
+global.sessionName = 'session'
+global.antitags = true
+global.prefa = ['','!','.','🐦','🐤','🗿']
+global.sp = '⭔'
+global.mess = {
+    success: 'Done ✓',
+    admin: 'This Feature Is Only For Admin!',
+    botAdmin: 'Bot Must Be Admin First!',
+    owner: 'This Feature Is Only For Owner!',
+    group: 'Feature Used Only For Groups!',
+    private: 'Features Used Only For Private Chat!',
+    bot: 'This Feature Is Only For Bot',
+    wait: 'In process...',
+    linkm: 'Where is the link?',
+    error: 'Error!!',
+    endLimit: 'Your Daily Limit Has Expired, The Limit Will Be Reset Every 12 Hours',
+    ban: 'You have been banned by the owner, if you want to be unbanned, chat owner.',
+    nsfw: 'The nsfw feature has not been activated, please contact the admin to activate',
+    banChat: 'The bot was banned in this group, please contact the owner to unban'
 }
-//document randomizer
-let documents = [doc1,doc2,doc3,doc4,doc5,doc6]
-let docs = pickRandom(documents)
-
-    AMRUSIR.ev.on('group-participants.update', async (anu) => {
-        console.log(anu)
-        try {
-            let metadata = await AMRUSIR.groupMetadata(anu.id)
-            let participants = anu.participants
-            for (let num of participants) {
-                // Get Profile Picture User
-                try {
-                    ppuser = await AMRUSIR.profilePictureUrl(num, 'image')
-                } catch {
-                    ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-                }
-
-                //Get Profile Picture Group\\
-                try {
-                    ppgroup = await AMRUSIR.profilePictureUrl(anu.id, 'image')
-                } catch {
-                    ppgroup = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
-                }
-
-//welcome\\
-        let nama = await AMRUSIR.getName(num)
-memb = metadata.participants.length
-XeonWlcm = await getBuffer(`https://hardianto.xyz/api/welcome3?profile=${encodeURIComponent(ppuser)}&name=${encodeURIComponent(nama)}&bg=https://telegra.ph/file/d460e086f9f9bf6b04e17.jpg&namegb=${encodeURIComponent(metadata.subject)}&member=${encodeURIComponent(memb)}`)
-XeonLft = await getBuffer(`https://hardianto.xyz/api/goodbye3?profile=${encodeURIComponent(ppuser)}&name=${encodeURIComponent(nama)}&bg=https://telegra.ph/file/d460e086f9f9bf6b04e17.jpg&namegb=${encodeURIComponent(metadata.subject)}&member=${encodeURIComponent(memb)}`)
-                if (anu.action == 'add') {
-                const xeonbuffer = await getBuffer(ppuser)
-                let xeonName = num
-                const xtime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-	            const xdate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-	            const xmembers = metadata.participants.length
-                let unicorndoc = {key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "916909137213-1604595598@g.us"}, "message": {orderMessage: {itemCount: 9999999,status: 200, thumbnail: XeonWlcm, surface: 200, message: `${metadata.subject}`, orderTitle: 'xeon', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}
-                xeonbody = `┌─❖
-│「 𝗛𝗶 👋 」
-└┬❖ 「 @${xeonName.split("@")[0]}  」
-   │✑  𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 
-   │✑  ${metadata.subject}
-   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
-   │✑ ${xmembers}th
-   │✑  𝗝𝗼𝗶𝗻𝗲𝗱 : 
-   │✑ ${xtime} ${xdate}
-   └───────────────┈ ⳹`
-      //if you copy the code value,
-   //dont forget to put my name(Xeon) as credit
-   //you fail to put, i sue you for sure!
-let buttons = [
-{buttonId: `wkwwk`, buttonText: {displayText: 'Welcome 💐'}, type: 1}
-]
-let buttonMessage = {
-document: fs.readFileSync('./XeonMedia/theme/cheems.xlsx'),
-mimetype: docs,
-jpegThumbnail:XeonWlcm,
-mentions: [num],
-fileName: `${metadata.subject}`,
-fileLength: 99999999999999,
-caption: xeonbody,
-footer: `${botname}`,
-buttons: buttons,
-headerType: 4,
-contextInfo:{externalAdReply:{
-title: `${ownername}`,
-body: `Don't forget to read group description`,
-mediaType:2,
-thumbnail: XeonWlcm,
-sourceUrl: `${websitex}`,
-mediaUrl: `${websitex}`
-}}
+    global.limitawal = {
+    premium: "Infinity",
+    free: 12,
+    monayawal: 1000
 }
-AMRUSIR.sendMessage(anu.id, buttonMessage, {quoted:unicorndoc})
-                } else if (anu.action == 'remove') {
-                	const xeonbuffer = await getBuffer(ppuser)
-                    const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-	                const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-                	let xeonName = num
-                    const xeonmembers = metadata.participants.length
-                    let unicorndoc = {key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "916909137213-1604595598@g.us"}, "message": {orderMessage: {itemCount: 9999999,status: 200, thumbnail: xeonbuffer, surface: 200, message: `${metadata.subject}`, orderTitle: 'xeon', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}
-                    xeonbody = `┌─❖
-│「 𝗚𝗼𝗼𝗱𝗯𝘆𝗲 👋 」
-└┬❖ 「 @${xeonName.split("@")[0]}  」
-   │✑  𝗟𝗲𝗳𝘁 
-   │✑ ${metadata.subject}
-   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
-   │✑ ${xeonmembers}th
-   │✑  𝗧𝗶𝗺𝗲 : 
-   │✑  ${xeontime} ${xeondate}
-   └───────────────┈ ⳹`
-      //if you copy the code value,
-   //dont forget to put my name(Xeon) as credit
-   //you fail to put, i sue you for sure!
-let buttons = [
-{buttonId: `wkwkwk`, buttonText: {displayText: 'Sayonara 🥀'}, type: 1}
-]
-let buttonMessage = {
-document: fs.readFileSync('./XeonMedia/theme/cheems.xlsx'),
-mimetype: docs,
-jpegThumbnail:XeonLft,
-mentions: [num],
-fileName: `${metadata.subject}`,
-fileLength: 99999999999999,
-caption: xeonbody,
-footer: `${botname}`,
-buttons: buttons,
-headerType: 4,
-contextInfo:{externalAdReply:{
-title: `${ownername}`,
-body: `Bye! my friend, take care.`,
-mediaType:2,
-thumbnail: XeonLft,
-sourceUrl: `${websitex}`,
-mediaUrl: `${websitex}`
-}}
+   global.rpg = {
+   darahawal: 100,
+   besiawal: 15,
+   goldawal: 10,
+   emeraldawal: 5,
+   umpanawal: 5,
+   potionawal: 1
 }
-AMRUSIR.sendMessage(anu.id, buttonMessage, {quoted:unicorndoc})
-                }
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    })
-	
-    //Setting\\
-    AMRUSIR.decodeJid = (jid) => {
-        if (!jid) return jid
-        if (/:\d+@/gi.test(jid)) {
-            let decode = jidDecode(jid) || {}
-            return decode.user && decode.server && decode.user + '@' + decode.server || jid
-        } else return jid
-    }
-    
-    AMRUSIR.ev.on('contacts.update', update => {
-        for (let contact of update) {
-            let id = AMRUSIR.decodeJid(contact.id)
-            if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
-        }
-    })
-
-    AMRUSIR.getName = (jid, withoutContact  = false) => {
-        id = AMRUSIR.decodeJid(jid)
-        withoutContact = AMRUSIR.withoutContact || withoutContact 
-        let v
-        if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
-            v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = AMRUSIR.groupMetadata(id) || {}
-            resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
-        })
-        else v = id === '0@s.whatsapp.net' ? {
-            id,
-            name: 'WhatsApp'
-        } : id === AMRUSIR.decodeJid(AMRUSIR.user.id) ?
-            AMRUSIR.user :
-            (store.contacts[id] || {})
-            return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
-    }
-    
-    AMRUSIR.sendContact = async (jid, kon, quoted = '', opts = {}) => {
-	let list = []
-	for (let i of kon) {
-	    list.push({
-	    	displayName: await AMRUSIR.getName(i + '@s.whatsapp.net'),
-	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await AMRUSIR.getName(i + '@s.whatsapp.net')}\nFN:${global.ownername}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Click here to chat\nitem2.EMAIL;type=INTERNET:${global.ytname}\nitem2.X-ABLabel:YouTube\nitem3.URL:${global.socialm}\nitem3.X-ABLabel:GitHub\nitem4.ADR:;;${global.location};;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
-	    	////////////////////////////////////////////////////////////vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${ownername}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Click To Chat\nitem2.EMAIL;type=INTERNET:${botscript}\nitem2.X-ABLabel:Script\nitem3.URL:${websitex}\nitem3.X-ABLabel:Script\nitem4.ADR:;;${location};;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
-	    })
-	}
-	AMRUSIR.sendMessage(jid, { contacts: { displayName: `${list.length} Contact`, contacts: list }, ...opts }, { quoted })
-    }
-    
-    AMRUSIR.setStatus = (status) => {
-        AMRUSIR.query({
-            tag: 'iq',
-            attrs: {
-                to: '@s.whatsapp.net',
-                type: 'set',
-                xmlns: 'status',
-            },
-            content: [{
-                tag: 'status',
-                attrs: {},
-                content: Buffer.from(status, 'utf-8')
-            }]
-        })
-        return status
-    }
-	
-    AMRUSIR.public = true
-
-    AMRUSIR.serializeM = (m) => smsg(AMRUSIR, m, store)
-
-    AMRUSIR.ev.on('connection.update', async (update) => {
-        const { connection, lastDisconnect } = update	    
-        if (connection === 'close') {
-        let reason = new Boom(lastDisconnect?.error)?.output.statusCode
-            if (reason === DisconnectReason.badSession) { console.log(`Bad Session File, Please Delete Session and Scan Again`); AMRUSIR.logout(); }
-            else if (reason === DisconnectReason.connectionClosed) { console.log("🦄Connection closed, reconnecting...."); startAMRUSIR(); }
-            else if (reason === DisconnectReason.connectionLost) { console.log("🦄Connection Lost from Server, reconnecting..."); startAMRUSIR(); }
-            else if (reason === DisconnectReason.connectionReplaced) { console.log("🦄Connection Replaced, Another New Session Opened, Please Close Current Session First"); AMRUSIR.logout(); }
-            else if (reason === DisconnectReason.loggedOut) { console.log(`🦄Device Logged Out, Please Scan Again And Run.`); AMRUSIR.logout(); }
-            else if (reason === DisconnectReason.restartRequired) { console.log("🦄Restart Required, Restarting..."); startAMRUSIR(); }
-            else if (reason === DisconnectReason.timedOut) { console.log("🦄Connection TimedOut, Reconnecting..."); startAMRUSIR(); }
-            else AMRUSIR.end(`🦄Unknown DisconnectReason: ${reason}|${connection}`)
-        }
-        console.log('Connected...', update)
-    })
-
-    AMRUSIR.ev.on('creds.update', saveState)
-
-    // Add Other
-    /** Send Button 5 Image
-     *
-     * @param {*} jid
-     * @param {*} text
-     * @param {*} footer
-     * @param {*} image
-     * @param [*] button
-     * @param {*} options
-     * @returns
-     */
-    AMRUSIR.send5ButImg = async (jid , text = '' , footer = '', img, but = [], options = {}) =>{
-        let message = await prepareWAMessageMedia({ image: img }, { upload: AMRUSIR.waUploadToServer })
-        var template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
-        templateMessage: {
-        hydratedTemplate: {
-        imageMessage: message.imageMessage,
-               "hydratedContentText": text,
-               "hydratedFooterText": footer,
-               "hydratedButtons": but
-            }
-            }
-            }), options)
-            AMRUSIR.relayMessage(jid, template.message, { messageId: template.key.id })
-    }
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} buttons 
-     * @param {*} caption 
-     * @param {*} footer 
-     * @param {*} quoted 
-     * @param {*} options 
-     */
-    AMRUSIR.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
-        let buttonMessage = {
-            text,
-            footer,
-            buttons,
-            headerType: 2,
-            ...options
-        }
-        AMRUSIR.sendMessage(jid, buttonMessage, { quoted, ...options })
-    }
-    
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} text 
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendText = (jid, text, quoted = '', options) => AMRUSIR.sendMessage(jid, { text: text, ...options }, { quoted })
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} path 
-     * @param {*} caption 
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendImage = async (jid, path, caption = '', quoted = '', options) => {
-	let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await AMRUSIR.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })
-    }
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} path 
-     * @param {*} caption 
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendVideo = async (jid, path, caption = '', quoted = '', gif = false, options) => {
-        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await AMRUSIR.sendMessage(jid, { video: buffer, caption: caption, gifPlayback: gif, ...options }, { quoted })
-    }
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} path 
-     * @param {*} quoted 
-     * @param {*} mime 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
-        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await AMRUSIR.sendMessage(jid, { audio: buffer, ptt: ptt, ...options }, { quoted })
-    }
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} text 
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendTextWithMentions = async (jid, text, quoted, options = {}) => AMRUSIR.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} path 
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
-        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        let buffer
-        if (options && (options.packname || options.author)) {
-            buffer = await writeExifImg(buff, options)
-        } else {
-            buffer = await imageToWebp(buff)
-        }
-
-        await AMRUSIR.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-        return buffer
-    }
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} path 
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
-        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        let buffer
-        if (options && (options.packname || options.author)) {
-            buffer = await writeExifVid(buff, options)
-        } else {
-            buffer = await videoToWebp(buff)
-        }
-
-        await AMRUSIR.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-        return buffer
-    }
-	
-    /**
-     * 
-     * @param {*} message 
-     * @param {*} filename 
-     * @param {*} attachExtension 
-     * @returns 
-     */
-    AMRUSIR.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
-        let quoted = message.msg ? message.msg : message
-        let mime = (message.msg || message).mimetype || ''
-        let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
-        const stream = await downloadContentFromMessage(quoted, messageType)
-        let buffer = Buffer.from([])
-        for await(const chunk of stream) {
-            buffer = Buffer.concat([buffer, chunk])
-        }
-	let type = await FileType.fromBuffer(buffer)
-        trueFileName = attachExtension ? (filename + '.' + type.ext) : filename
-        // save to file
-        await fs.writeFileSync(trueFileName, buffer)
-        return trueFileName
-    }
-
-    AMRUSIR.downloadMediaMessage = async (message) => {
-        let mime = (message.msg || message).mimetype || ''
-        let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
-        const stream = await downloadContentFromMessage(message, messageType)
-        let buffer = Buffer.from([])
-        for await(const chunk of stream) {
-            buffer = Buffer.concat([buffer, chunk])
-	}
-        
-	return buffer
-     } 
-    
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} path 
-     * @param {*} filename
-     * @param {*} caption
-     * @param {*} quoted 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
-        let types = await AMRUSIR.getFile(path, true)
-           let { mime, ext, res, data, filename } = types
-           if (res && res.status !== 200 || file.length <= 65536) {
-               try { throw { json: JSON.parse(file.toString()) } }
-               catch (e) { if (e.json) throw e.json }
-           }
-       let type = '', mimetype = mime, pathFile = filename
-       if (options.asDocument) type = 'document'
-       if (options.asSticker || /webp/.test(mime)) {
-        let { writeExif } = require('./lib/exif')
-        let media = { mimetype: mime, data }
-        pathFile = await writeExif(media, { packname: options.packname ? options.packname : global.packname, author: options.author ? options.author : global.author, categories: options.categories ? options.categories : [] })
-        await fs.promises.unlink(filename)
-        type = 'sticker'
-        mimetype = 'image/webp'
-        }
-       else if (/image/.test(mime)) type = 'image'
-       else if (/video/.test(mime)) type = 'video'
-       else if (/audio/.test(mime)) type = 'audio'
-       else type = 'document'
-       await AMRUSIR.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options })
-       return fs.promises.unlink(pathFile)
-       }
-
-    /**
-     * 
-     * @param {*} jid 
-     * @param {*} message 
-     * @param {*} forceForward 
-     * @param {*} options 
-     * @returns 
-     */
-    AMRUSIR.copyNForward = async (jid, message, forceForward = false, options = {}) => {
-        let vtype
-		if (options.readViewOnce) {
-			message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
-			vtype = Object.keys(message.message.viewOnceMessage.message)[0]
-			delete(message.message && message.message.ignore ? message.message.ignore : (message.message || undefined))
-			delete message.message.viewOnceMessage.message[vtype].viewOnce
-			message.message = {
-				...message.message.viewOnceMessage.message
-			}
-		}
-
-        let mtype = Object.keys(message.message)[0]
-        let content = await generateForwardMessageContent(message, forceForward)
-        let ctype = Object.keys(content)[0]
-		let context = {}
-        if (mtype != "conversation") context = message.message[mtype].contextInfo
-        content[ctype].contextInfo = {
-            ...context,
-            ...content[ctype].contextInfo
-        }
-        const waMessage = await generateWAMessageFromContent(jid, content, options ? {
-            ...content[ctype],
-            ...options,
-            ...(options.contextInfo ? {
-                contextInfo: {
-                    ...content[ctype].contextInfo,
-                    ...options.contextInfo
-                }
-            } : {})
-        } : {})
-        await AMRUSIR.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
-        return waMessage
-    }
-
-    AMRUSIR.cMod = (jid, copy, text = '', sender = AMRUSIR.user.id, options = {}) => {
-        //let copy = message.toJSON()
-		let mtype = Object.keys(copy.message)[0]
-		let isEphemeral = mtype === 'ephemeralMessage'
-        if (isEphemeral) {
-            mtype = Object.keys(copy.message.ephemeralMessage.message)[0]
-        }
-        let msg = isEphemeral ? copy.message.ephemeralMessage.message : copy.message
-		let content = msg[mtype]
-        if (typeof content === 'string') msg[mtype] = text || content
-		else if (content.caption) content.caption = text || content.caption
-		else if (content.text) content.text = text || content.text
-		if (typeof content !== 'string') msg[mtype] = {
-			...content,
-			...options
-        }
-        if (copy.key.participant) sender = copy.key.participant = sender || copy.key.participant
-		else if (copy.key.participant) sender = copy.key.participant = sender || copy.key.participant
-		if (copy.key.remoteJid.includes('@s.whatsapp.net')) sender = sender || copy.key.remoteJid
-		else if (copy.key.remoteJid.includes('@broadcast')) sender = sender || copy.key.remoteJid
-		copy.key.remoteJid = jid
-		copy.key.fromMe = sender === AMRUSIR.user.id
-
-        return proto.WebMessageInfo.fromObject(copy)
-    }
-
-
-//send 5 button image by xeon
-    AMRUSIR.send5ButImg = async (jid , text = '' , footer = '', img, but = [], thumb, options = {}) =>{
-        let message = await prepareWAMessageMedia({ image: img, jpegThumbnail:thumb }, { upload: AMRUSIR.waUploadToServer })
-        var template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
-        templateMessage: {
-        hydratedTemplate: {
-        imageMessage: message.imageMessage,
-               "hydratedContentText": text,
-               "hydratedFooterText": footer,
-               "hydratedButtons": but
-            }
-            }
-            }), options)
-            AMRUSIR.relayMessage(jid, template.message, { messageId: template.key.id })
-    }
-
-
-    //send5butvid by xeon
-        AMRUSIR.send5ButVid = async (jid , text = '' , footer = '', vid, but = [], options = {}) =>{
-        let message = await prepareWAMessageMedia({ video: vid }, { upload: AMRUSIR.waUploadToServer })
-        var template = generateWAMessageFromContent(jid, proto.Message.fromObject({
-        templateMessage: {
-        hydratedTemplate: {
-        videoMessage: message.videoMessage,
-               "hydratedContentText": text,
-               "hydratedFooterText": footer,
-               "hydratedButtons": but
-            }
-            }
-            }), options)
-            AMRUSIR.relayMessage(jid, template.message, { messageId: template.key.id })
-    }
-    
-    
-    //send5butmsg by xeon
-            AMRUSIR.send5ButMsg = (jid, text = '' , footer = '', but = []) =>{
-        let templateButtons = but
-        var templateMessage = {
-        text: text,
-        footer: footer,
-        templateButtons: templateButtons
-        }
-        AMRUSIR.sendMessage(jid, templateMessage)
-        }
-
-
-//sendlistmsg by xeon
-        AMRUSIR.sendListMsg = (jid, text = '', footer = '', title = '' , butText = '', sects = [], quoted) => {
-        let sections = sects
-        var listMes = {
-        text: text,
-        footer: footer,
-        title: title,
-        buttonText: butText,
-        sections
-        }
-        AMRUSIR.sendMessage(jid, listMes, { quoted: quoted })
-        }
-
-
-    //send5butgif by xeon
-        AMRUSIR.send5ButGif = async (jid , text = '' , footer = '', gif, but = [], options = {}) =>{
-        let message = await prepareWAMessageMedia({ video: gif, gifPlayback: true }, { upload: AMRUSIR.waUploadToServer })
-        var template = generateWAMessageFromContent(jid, proto.Message.fromObject({
-        templateMessage: {
-        hydratedTemplate: {
-        videoMessage: message.videoMessage,
-               "hydratedContentText": text,
-               "hydratedFooterText": footer,
-               "hydratedButtons": but
-            }
-            }
-            }), options)
-            AMRUSIR.relayMessage(jid, template.message, { messageId: template.key.id })
-    }
-
-
-    /**
-     * 
-     * @param {*} path 
-     * @returns 
-     */
-    AMRUSIR.getFile = async (PATH, save) => {
-        let res
-        let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
-        //if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
-        let type = await FileType.fromBuffer(data) || {
-            mime: 'application/octet-stream',
-            ext: '.bin'
-        }
-        filename = path.join(__filename, '../src/' + new Date * 1 + '.' + type.ext)
-        if (data && save) fs.promises.writeFile(filename, data)
-        return {
-            res,
-            filename,
-	    size: await getSizeMedia(data),
-            ...type,
-            data
-        }
-
-    }
-
-    return AMRUSIR
-}
-
-startAMRUSIR()
-
-
+global.thumb = fs.readFileSync('./XeonMedia/theme/cheemspic.jpg')
+global.flaming = 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=sketch-name&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&text='
+global.fluming = 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=fluffy-logo&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&text='
+global.flarun = 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=runner-logo&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&text='
+global.flasmurf = 'https://www6.flamingtext.com/net-fu/proxy_form.cgi?&imageoutput=true&script=smurfs-logo&doScale=true&scaleWidth=800&scaleHeight=500&fontsize=100&text='
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
 	fs.unwatchFile(file)
-	console.log(chalk.redBright(`Update ${__filename}`))
+	console.log(chalk.redBright(`Update'${__filename}'`))
 	delete require.cache[file]
 	require(file)
 })
