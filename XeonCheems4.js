@@ -6264,7 +6264,7 @@ case 'ig2': case 'igdl2': case 'instagram2': {
             }).catch((err) => reply(mess.error))
             }		
 			break
-case 'igdl': case 'insta': case 'instagramreels': case 'igreels': {
+case 'igdl': case 'instagram': case 'instagramreels': case 'igreels': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!args[0]) return reply(`Example :\n${prefix + command} https://www.instagram.com/p/CcvJGuxh9VI/?igshid=YmMyMTA2M2Y=`)
@@ -6349,7 +6349,7 @@ reply("Link error")
 }
 }
 break
-case 'igtv': {	            
+case 'insta': {	            
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
                 if (!text) return reply(`Where is the link boss?`)
