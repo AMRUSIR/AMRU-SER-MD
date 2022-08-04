@@ -8024,8 +8024,8 @@ let search = await yts(text)
 let anu = search.videos[Math.floor(Math.random() * search.videos.length)]
 let ytvc = await hx.youtube(anu.url)
 let buttons = [
-{buttonId: `ytvd ${ytvc.link}`, buttonText: {displayText: '► Video'}, type: 1},
-{buttonId: `ytad ${ytvc.mp3}`, buttonText: {displayText: '♫ Audio'}, type: 1}
+{buttonId: `ytmp4x ${anu.url}`, buttonText: {displayText: 'Vɪᴅᴇᴏ'}, type: 1},
+{buttonId: `ytmp3x ${anu.url}`, buttonText: {displayText: 'Aᴜᴅɪᴏ'}, type: 1}
 ]
 let buttonMessage = {
 image: { url: anu.thumbnail },
@@ -10691,3 +10691,4 @@ fs.watchFile(file, () => {
 	delete require.cache[file]
 	require(file)
 })
+,
