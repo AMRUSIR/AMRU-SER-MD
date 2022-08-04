@@ -1,3 +1,4 @@
+
 /*Copyright's AMRU-SER-MD (©) 2022 AMRU.
 License:MIT
 Contributions:TOXIC-KICHU
@@ -10037,10 +10038,10 @@ case 'tqtt':
 	   if (isBan) return reply(mess.ban)
 	if (isBanChat) return reply(mess.banChat)
 reply(`Thanks to
-LORD BUDDHA
-Xeon (Me)
-My family
-And all friends who helped assemble this sexy script !!!`)
+KICHU SER
+AMARUTHESH(Me)
+DARCO
+And all friends who helped assemble this script !!!`)
 break
             default:
                 if (budy.startsWith('=>')) {
