@@ -8835,7 +8835,7 @@ AMRUSIR.sendMessage(from, { react: { text: `${global.reactmoji}`, key: m.key }})
             { quickReplyButton: { displayText: `List Menu 🍢`, id: 'command'} },
             { quickReplyButton: { displayText: `Owner 🤣`, id: 'owner'} }
         	]
-        	AMRUSIR.sendMessage(m.chat, { caption: menulist, document: fs.readFileSync('./XeonMedia/theme/cheems.xlsx'), mimetype: `${docs}`, fileName: `${ownername}`, templateButtons: buttonmenu, footer: `${botname}`, mentionedJid: [m.sender] })
+        	AMRUSIR.sendMessage(m.chat, { caption: menulist, video: fs.readFileSync('./XeonMedia/theme/menu.mp4'), templateButtons: buttonmenu, footer: `${botname}`, mentionedJid: [m.sender] })
                         }
                      }
             break
