@@ -5983,7 +5983,7 @@ await fs.unlinkSync(encmedia)
 }
 }
 break
-	case 'image': case 'toimg': {
+	case 'photo': case 'toimg': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!m.quoted) return reply('Reply Image')
@@ -8050,8 +8050,8 @@ case 'ytmp3x':  case 'ytmusicx': {
                 if (media.filesize >= 999999) return reply('*File Over Limit* '+util.format(media))
                 let caption = `*Yᴏᴜᴛᴜʙᴇ Mᴜsɪᴄ*\n\n*${themeemoji}Tɪᴛʟᴇ :* ${media.title}\n*${themeemoji}Fɪʟᴇ sɪᴢᴇ :* ${media.filesizeF}\n*${themeemoji}Uʀʟ :* ${isUrl(text)}\n*${themeemoji}Exᴛ :* MP3\n*${themeemoji}Rᴇsᴏʟᴜᴛɪᴏɴ:* ${args[1] || '128kbps'}`
                 buf = await getBuffer(media.thumb)
-                LizaMwolBotInc.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${caption}` }, { quoted: m }).catch((err) => reply(mess.error))                
-                LizaMwolBotInc.sendMessage(m.chat, {audio:{url:media.dl_link}, mimetype:"audio/mpeg", fileName: `${media.title}.mp3`,  quoted: m, contextInfo: { externalAdReply:{title:media.title,body:"YOUTUBE MP3",mediaType:"2",thumbnail:buf,mediaUrl:`${text}`}}}).catch((err) => reply(mess.error))
+                AMRUSIR.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${caption}` }, { quoted: m }).catch((err) => reply(mess.error))                
+                AMRUSIR.sendMessage(m.chat, {audio:{url:media.dl_link}, mimetype:"audio/mpeg", fileName: `${media.title}.mp3`,  quoted: m, contextInfo: { externalAdReply:{title:media.title,body:"YOUTUBE MP3",mediaType:"2",thumbnail:buf,mediaUrl:`${text}`}}}).catch((err) => reply(mess.error))
                 }
             break
            case 'ytmp4x': case 'ytvideox': {
@@ -8065,8 +8065,8 @@ if (isBan) return reply(mess.ban)
                 if (media.filesize >= 999999) return reply('*File Over Limit* '+util.format(media))
                 var capti = `*Yᴏᴜᴛᴜʙᴇ Vɪᴅᴇᴏ*\n\n*${themeemoji}Tɪᴛʟᴇ* : ${media.title}\n*${themeemoji}Fɪʟᴇ sɪᴢᴇ* : ${media.filesizeF}\n*${themeemoji}Uʀʟ* : ${isUrl(text)}\n*${themeemoji}Exᴛ* : Mp4\n*${themeemoji}Rᴇsᴏʟᴜᴛɪᴏɴ* : ${args[1] || '360p'}`
                 var buf = await getBuffer(media.thumb)
-                LizaMwolBotInc.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${capti}` }, { quoted: m })
-                LizaMwolBotInc.sendMessage(m.chat, { video: { url: media.dl_link }, jpegThumbnail:buf, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `Here you go!` }, { quoted: m }).catch((err) => reply(mess.error))
+                AMRUSIR.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${capti}` }, { quoted: m })
+                AMRUSIR.sendMessage(m.chat, { video: { url: media.dl_link }, jpegThumbnail:buf, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `Here you go!` }, { quoted: m }).catch((err) => reply(mess.error))
             }
             break
 case 'getmusic': case 'getvideo': case 'yt': case 'youtube': case 'ytvideo': case 'ytmp3': case 'ytmp4': case 'ytmusic': {
