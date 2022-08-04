@@ -1,25 +1,8 @@
-//════════════════════════════//
-//If you want to recode, reupload
-//or copy the codes/script,
-//pls give credit
-//no credit? i will take action immediately
-//© 2022 Xeon Bot Inc. Cheems Bot MD
-//Thank you to Lord Buddha, Family and Myself
-//════════════════════════════//
-//recode kar ke youtube pe upload kar rhe hai ya
-//codes copy kar ke apne script me dal rhe
-//hai to, description me xeon ka yt channel
-// ka link paste kr dena as a cradit or github 
-//repo me bhi tag kardena baki jo
-//bhi karna hai apki marzi, thank you!🦄
-//════════════════════════════//
-//If you recode and uploading on your channel
-//or copy pasting the codes in ur script, 
-//i give permission to do as long as you
-//put Xeons youtube channel link in the video
-//description and tag me on githuh repo, 
-//thank you🦄
-//════════════════════════════//
+/*Copyright's AMRU-SER-MD (©) 2022 AMRU.
+License:MIT
+Contributions:TOXIC-KICHU
+THANKS FOR CHOOSING AMRU SER MD
+*/
 
 require('./settings')
 const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType } = require('@adiwajshing/baileys')
@@ -8056,6 +8039,36 @@ sourceUrl: anu.url
 AMRUSIR.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
+case 'ytmp3x':  case 'ytmusicx': {	    
+	                	   if (isBan) return reply(mess.ban)
+	if (isBanChat) return reply(mess.banChat)
+                let { yta } = require('./lib/y2mate')
+                if (!text) return reply(`Example : ${prefix + command} https://youtube.com/watch?v=PtFMh6Tccag%27 128kbps`)
+                if (!isUrl(args[0]) && !args[0].includes('youtube.com')) return reply(`The link you provided is invalid`)
+                let quality = args[1] ? args[1] : '128kbps'
+                let media = await yta(text, quality)
+                if (media.filesize >= 999999) return reply('*File Over Limit* '+util.format(media))
+                let caption = `*Yᴏᴜᴛᴜʙᴇ Mᴜsɪᴄ*\n\n*${themeemoji}Tɪᴛʟᴇ :* ${media.title}\n*${themeemoji}Fɪʟᴇ sɪᴢᴇ :* ${media.filesizeF}\n*${themeemoji}Uʀʟ :* ${isUrl(text)}\n*${themeemoji}Exᴛ :* MP3\n*${themeemoji}Rᴇsᴏʟᴜᴛɪᴏɴ:* ${args[1] || '128kbps'}`
+                buf = await getBuffer(media.thumb)
+                LizaMwolBotInc.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${caption}` }, { quoted: m }).catch((err) => reply(mess.error))                
+                LizaMwolBotInc.sendMessage(m.chat, {audio:{url:media.dl_link}, mimetype:"audio/mpeg", fileName: `${media.title}.mp3`,  quoted: m, contextInfo: { externalAdReply:{title:media.title,body:"YOUTUBE MP3",mediaType:"2",thumbnail:buf,mediaUrl:`${text}`}}}).catch((err) => reply(mess.error))
+                }
+            break
+           case 'ytmp4x': case 'ytvideox': {
+if (isBan) return reply(mess.ban)
+	if (isBanChat) return reply(mess.banChat)
+                let { ytv } = require('./lib/y2mate')
+                if (!text) return reply(`Example : ${prefix + command} https://youtube.com/watch?v=RNa4thokVJ4 360p`)
+                if (!isUrl(args[0]) && !args[0].includes('youtube.com')) return reply(`The link you provided is invalid!`)
+                let quality = args[1] ? args[1] : '360p'
+                let media = await ytv(text, quality)
+                if (media.filesize >= 999999) return reply('*File Over Limit* '+util.format(media))
+                var capti = `*Yᴏᴜᴛᴜʙᴇ Vɪᴅᴇᴏ*\n\n*${themeemoji}Tɪᴛʟᴇ* : ${media.title}\n*${themeemoji}Fɪʟᴇ sɪᴢᴇ* : ${media.filesizeF}\n*${themeemoji}Uʀʟ* : ${isUrl(text)}\n*${themeemoji}Exᴛ* : Mp4\n*${themeemoji}Rᴇsᴏʟᴜᴛɪᴏɴ* : ${args[1] || '360p'}`
+                var buf = await getBuffer(media.thumb)
+                LizaMwolBotInc.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${capti}` }, { quoted: m })
+                LizaMwolBotInc.sendMessage(m.chat, { video: { url: media.dl_link }, jpegThumbnail:buf, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `Here you go!` }, { quoted: m }).catch((err) => reply(mess.error))
+            }
+            break
 case 'getmusic': case 'getvideo': case 'yt': case 'youtube': case 'ytvideo': case 'ytmp3': case 'ytmp4': case 'ytmusic': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
