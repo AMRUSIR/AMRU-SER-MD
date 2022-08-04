@@ -50,11 +50,11 @@ AMRU-SER Bot Multi Device is a automated whatsapp bot created by <a href="https:
 
 ## `SETTINGS`
 
-- CHANGE OWNER NUMBER VCARD [Here](https://github.com/DGXeon/CheemsBot-MD4/blob/master/settings.js#L58)
-- CHANGE OWNER NUMBER MENU [Here](https://github.com/DGXeon/CheemsBot-MD4/blob/master/settings.js#L65)
-- CHANGE OWNER NUMBER TAG [Here](https://github.com/DGXeon/CheemsBot-MD4/blob/master/settings.js#L66)
-- CHANGE OWNER NAME [Here](https://github.com/DGXeon/CheemsBot-MD4/blob/master/settings.js#L59)
-- CHANGE BOT NAME [Here](https://github.com/DGXeon/CheemsBot-MD4/blob/master/settings.js#L67)
+- CHANGE OWNER NUMBER VCARD [Here](https://github.com/AMRUSIR/AMRU-SER-MD/blob/master/settings.js#L58)
+- CHANGE OWNER NUMBER MENU [Here](https://github.com/AMRUSIR/AMRU-SER-MD/blob/master/settings.js#L65)
+- CHANGE OWNER NUMBER TAG [Here](https://github.com/AMRUSIR/AMRU-SER-MD/blob/master/settings.js#L66)
+- CHANGE OWNER NAME [Here](https://github.com/AMRUSIR/AMRU-SER-MD/blob/master/settings.js#L59)
+- CHANGE BOT NAME [Here](https://github.com/AMRUSIR/AMRU-SER-MD/blob/master/settings.js#L67)
 
 ## ` BUILDPACKS`
 
