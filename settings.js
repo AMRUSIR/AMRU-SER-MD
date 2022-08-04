@@ -69,7 +69,7 @@ global.websitex = "" //ur website to be displayed
 global.botscript = 'https://github.com/AMRUSIR/AMRU-SER-MD' //script link
 global.reactmoji = "🙂" //ur menu react emoji
 global.themeemoji = "😈" //ur theme emoji
-global.packname = "AMRU\n\n\n\n\n\n\n\n\n\n\n😈😈😈 " //ur sticker watermark packname
+global.packname = "AMRU-SER" //ur sticker watermark packname
 global.author = "AMRU-SER-MD" //ur sticker watermark author
 
 //Bot theme media
