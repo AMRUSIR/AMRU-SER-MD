@@ -732,36 +732,6 @@ AMRUSIR.sendMessage(from, {text:`\`\`\`「 Link Detected 」\`\`\`\n\n@${kice.sp
 } else {
 }
 
-                //auto reply by xeon
-  //if (Autoreply) //remove forwad slashes to make it autoreply on off
-        for (let anji of xeonysticker){
-				if (budy === anji){
-					result = fs.readFileSync(`./XeonMedia/sticker/${anji}.webp`)
-					AMRUSIR.sendMessage(m.chat, { sticker: result }, { quoted: m })
-					}
-			}
-			  //if (Autoreply) //remove forwad slashes to make it autoreply on off
-			for (let anju of xeonyaudio){
-				if (budy === anju){
-					result = fs.readFileSync(`./XeonMedia/audio/${anju}.mp3`)
-					AMRUSIR.sendMessage(m.chat, { audio: result, mimetype: 'audio/mp4', ptt: true }, { quoted: m })     
-					}
-			}
-			  //if (Autoreply) //remove forwad slashes to make it autoreply on off
-			for (let anjh of xeonyimage){
-				if (budy === anjh){
-					result = fs.readFileSync(`./XeonMedia/image/${anjh}.jpg`)
-					AMRUSIR.sendMessage(m.chat, { image: result }, { quoted: m })
-					}
-			}
-			  //if (Autoreply) //remove forwad slashes to make it autoreply on off
-					for (let anjh of xeonyvideo){
-				if (budy === anjh){
-					result = fs.readFileSync(`./XeonMedia/video/${anjh}.mp4`)
-					AMRUSIR.sendMessage(m.chat, { video: result }, { quoted: m })
-					}
-				  }
-
 //emoji 
 const emote = (satu, dua) => {
 try{	    
@@ -2405,30 +2375,6 @@ replay('Success in turning off antivirus this group')
   { buttonId: `${command} off`, buttonText: { displayText: 'Off' }, type: 1 }
   ]
   await AMRUSIR.sendButtonText(m.chat, buttonsntvirtex, `Please click the button below\n\nOn to enable\nOff to disable`, `${global.botname}`, m)
-  }
-  }
-  break
-    case 'autoreply': {
-   if (isBan) return reply(mess.ban)	 			
-if (isBanChat) return reply(mess.banChat)
-if (!m.isGroup) return replay(mess.group)
-if (!isBotAdmins) return replay(mess.botAdmin)
-if (!isAdmins && !isCreator) return replay(mess.admin)
-if (args[0] === "on") {
-if (Autoreply) return replay('Already activated')
-autorep.push(from)
-replay('Success in turning on the autoreply in this group')
-} else if (args[0] === "off") {
-if (!Autoreply) return replay('Already deactivated')
-let off = autorep.indexOf(from)
-autorep.splice(off, 1)
-replay('Success in turning off autoreply in this group')
-} else {
-  let buttonswlcm = [
-  { buttonId: `${command} on`, buttonText: { displayText: 'On' }, type: 1 },
-  { buttonId: `${command} off`, buttonText: { displayText: 'Off' }, type: 1 }
-  ]
-  await AMRUSIR.sendButtonText(m.chat, buttonswlcm, `Please click the button below\n\nOn to enable\nOff to disable`, `${global.botname}`, m)
   }
   }
   break
@@ -7586,22 +7532,18 @@ break
             }
             break
 case 'ytshorts': case 'shorts': {
-   if (isBan) return reply(mess.ban)	 			
-if (isBanChat) return reply(mess.banChat)
-  if (!text) return reply(`*Use ${prefix + command} put yt shorts link*`)
-  if (!isUrl(args[0]) && !args[0].includes('youtube')) return reply(`The link you provided is not valid`)
-  xeonkey.Youtube(`${text}`).then(async (data) => {
-  if (data.medias[0].formattedSize.split('MB')[0] >= 999) return reply('*File Over Limit* '+util.format(data)) 
-  cap = `
-*YOUTUBE SHORTS*
-
-*${themeemoji}TITLE:* ${data.title}\n*${themeemoji}QUALITY:* ${data.medias[0].quality}\n*${themeemoji}SIZE:* ${data.medias[0].formattedSize}\n*${themeemoji}DURATION* ${data.duration}\n*${themeemoji}ID:* ${data.medias[0].cached}\n*${themeemoji}LINK:* ${data.url}\n\n*${botname}*`
-  buf = await getBuffer(data.thumbnail)
-  AMRUSIR.sendMessage(m.chat, { image: { url: data.thumbnail }, jpegThumbnail:buf, caption: `${cap}` }, { quoted: m })
-  AMRUSIR.sendMessage(m.chat, { video: { url: data.medias[0].url }, jpegThumbnail:buf, caption: `*${themeemoji}TITLE:* ${data.title}\n*${themeemoji}QUALITY:* ${data.medias[0].quality}\n*${themeemoji}SIZE:* ${data.medias[0].formattedSize}` }, { quoted: m })  
-                }).catch((err) => {
-                    reply(mess.reply)
-                })
+if (isBan) return reply(mess.ban)
+	if (isBanChat) return reply(mess.banChat)
+                let { ytv } = require('./lib/y2mate')
+                if (!text) return reply(`Example : ${prefix + command} https://youtube.com/watch?v=RNa4thokVJ4 360p`)
+                if (!isUrl(args[0]) && !args[0].includes('youtube.com')) return reply(`The link you provided is invalid!`)
+                let quality = args[1] ? args[1] : '360p'
+                let media = await ytv(text, quality)
+                if (media.filesize >= 999999) return reply('*File Over Limit* '+util.format(media))
+                var capti = `*Yᴏᴜᴛᴜʙᴇ Vɪᴅᴇᴏ*\n\n*${themeemoji}Tɪᴛʟᴇ* : ${media.title}\n*${themeemoji}Fɪʟᴇ sɪᴢᴇ* : ${media.filesizeF}\n*${themeemoji}Uʀʟ* : ${isUrl(text)}\n*${themeemoji}Exᴛ* : Mp4\n*${themeemoji}Rᴇsᴏʟᴜᴛɪᴏɴ* : ${args[1] || '360p'}`
+                var buf = await getBuffer(media.thumb)
+                AMRUSIR.sendMessage(m.chat, { image: { url: media.thumb }, jpegThumbnail:buf, caption: `${capti}` }, { quoted: m })
+                AMRUSIR.sendMessage(m.chat, { video: { url: media.dl_link }, jpegThumbnail:buf, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `_Video here!_` }, { quoted: m }).catch((err) => reply(mess.error))
             }
             break
 	  case 'pinterest': case 'pin': {
