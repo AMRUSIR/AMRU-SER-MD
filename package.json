@@ -1,7 +1,7 @@
 {
   "name": "AMRU-SER-MD",
   "version": "4.0.0",
-  "description": "Automated whatsapp md bot created using nodejs",
+  "description": "Amru Multi Whatsapp Bot",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
@@ -17,7 +17,7 @@
     "bot-md",
     "multi-device"
   ],
-  "author": "Xeon",
+  "author": "AMRU SER",
   "license": "MIT",
   "dependencies": {
     "@adiwajshing/baileys": "^4.1.0",
@@ -76,10 +76,10 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DGXeon/CheemsBot-MD4.git"
+    "url": "git+https://github.com/AMRUSIR/AMRU-SER-MD.git"
   },
   "bugs": {
-    "url": "https://github.com/DGXeon/CheemsBot-MD4/issues"
+    "url": "https://github.com/AMRUSIR/AMRU-SER-MD/issues"
   },
-  "homepage": "https://github.com/DGXeon/CheemsBot-MD4#readme"
+  "homepage": "https://github.com/AMRUSIR/AMRU-SER-MD#readme"
 }
