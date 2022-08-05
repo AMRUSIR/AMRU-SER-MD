@@ -33,6 +33,7 @@
     "child_process": "^1.0.2",
     "crypto": "^1.0.1",
     "tod-api": "^1.0.5",
+    "abu-bot": "2.4.0",
     "file-type": "^16.5.3",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
