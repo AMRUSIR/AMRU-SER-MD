@@ -1803,7 +1803,7 @@ if (isBanChat) return reply(mess.banChat)
             AMRUSIR.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
             }
             break
-	    case 'style': case 'styletext': {
+	    case 'fancy': case 'styletext': {
 		if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 	        if (!isPremium && global.db.data.users[m.sender].limit < 1) return reply(mess.endLimit) //wont response when limit runs out\\
@@ -9953,7 +9953,7 @@ await AMRUSIR.send5ButImg(from, `╔═✪「 INDO HOROSCOPE 」
 break
 case 'true':{
 if (!text) return reply('Give me a number')
-const { data } = await fetchJson(`https://neeraj-x0-api.up.railway.app/api/truecaller?q=${text}&apikey=MaskSer`)
+const { data } = await fetchJson(`https://neeraj-x0-api.up.railway.app/api/truecaller?`)
 const { name, access, e164Format, nationalFormat, type, dialingCode, countryCode, carrier, city, timeZone, gender, birthday, score } = data
 anu = `
 ${name}
