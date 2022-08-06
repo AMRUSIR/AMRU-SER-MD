@@ -9951,6 +9951,46 @@ await AMRUSIR.send5ButImg(from, `╔═✪「 INDO HOROSCOPE 」
 ╠${prefix}shio
 ╚═════════════✪` + '' + ' ', `${botname}`,unicorn, [{"urlButton": {"displayText": "YouTube 📍","url": `${websitex}`}},{"urlButton": {"displayText": "Script🔖","url": `${botscript}`}},{"quickReplyButton": {"displayText": "Donate 🍜","id": 'donate'}},{"quickReplyButton": {"displayText": "Owner 👤","id": 'owner'}}] )
 break
+case 'true':{
+if (!text) return reply('Give me a number')
+let {find} = require('abu-bot')
+var go;
+if (msg.reply_message) go = msg.reply_message.jid.split('@')[0]
+else if (!query[1].includes('@')) go = query[1]
+else if (msg.mention) {
+var mm = '';
+msg.mention.map(async (user) => {
+mm += user.split('@')[0];
+});
+go = mm
+} 
+var initt = go.split(" ").join("")
+var number = initt.replace('+','')
+`
+const template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
+                    templateMessage: {
+                        hydratedTemplate: {
+                            hydratedContentText: anu,
+                            locationMessage: {
+                            jpegThumbnail: fs.readFileSync('./XeonMedia/theme/cheemspic.jpg')},
+                            hydratedFooterText: `AMRU BLOCK⁩⁩⁩`,
+                            hydratedButtons: [{
+                                urlButton: {
+                                displayText: 'Number',
+                                    url: `${text}`
+                                }
+                            }, {
+                                quickReplyButton: {
+                                    displayText: '👤Owner',
+                                    id: `${prefix}owner`
+                                }
+                            }]
+                        }
+                    }
+                }),{ userJid: m.chat })
+                AMRUSIR.relayMessage(m.chat, template.message, { messageId: template.key.id })
+            }
+break
 case 'othermenu':
 	   if (isBan) return reply(mess.ban)
 	if (isBanChat) return reply(mess.banChat)
