@@ -260,7 +260,7 @@ autoreadsw = true
                 if (!isNumber(user.afkTime)) user.afkTime = -1
                 if (!('afkReason' in user)) user.afkReason = ''
                 if (!isNumber(user.limit)) user.limit = limitUser
-            } else global.db.data.users[m.sender] = {
+            } else global.db.data.users[m.sender] = { 
                 afkTime: -1,
                 afkReason: '',
                 limit: limitUser,
@@ -9953,19 +9953,22 @@ await AMRUSIR.send5ButImg(from, `╔═✪「 INDO HOROSCOPE 」
 break
 case 'true':{
 if (!text) return reply('Give me a number')
-let {find} = require('abu-bot')
-var go;
-if (msg.reply_message) go = msg.reply_message.jid.split('@')[0]
-else if (!query[1].includes('@')) go = query[1]
-else if (msg.mention) {
-var mm = '';
-msg.mention.map(async (user) => {
-mm += user.split('@')[0];
-});
-go = mm
-} 
-var initt = go.split(" ").join("")
-var number = initt.replace('+','')
+const { data } = await fetchJson(`https://neeraj-x0-api.up.railway.app/api/truecaller?q=${text}&apikey=MaskSer`)
+const { name, access, e164Format, nationalFormat, type, dialingCode, countryCode, carrier, city, timeZone, gender, birthday, score } = data
+anu = `
+${name}
+${access}
+${e164Format}
+${nationalFormat}
+${type}
+${dialingCode}
+${countryCode}
+${carrier}
+${city}
+${gender}
+${birthday}
+${score}
+${timeZone}
 `
 const template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
                     templateMessage: {
@@ -9973,7 +9976,7 @@ const template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
                             hydratedContentText: anu,
                             locationMessage: {
                             jpegThumbnail: fs.readFileSync('./XeonMedia/theme/cheemspic.jpg')},
-                            hydratedFooterText: `AMRU BLOCK⁩⁩⁩`,
+                            hydratedFooterText: `ꪶ𝗦𝗟𝚫𝗬𝚵𝗥-𝗠𝗗ꫂ⁩⁩⁩`,
                             hydratedButtons: [{
                                 urlButton: {
                                 displayText: 'Number',
