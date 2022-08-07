@@ -5526,7 +5526,6 @@ let gis = require('g-i-s')
 gis(args.join(" "), async (error, result) => {
 n = result
 images = n[Math.floor(Math.random() * n.length)].url
-image: { url: images },
 caption: `*| GOOGLE IMAGE |*
 
 ${global.themeemoji} Query : ${text}
