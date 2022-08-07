@@ -5518,19 +5518,25 @@ reply(teks)
 })
 }
 break
-case 'img': case 'googleimage': {
+case 'img': case 'gimage': case 'gig': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
-if (!args[0]) return reply("What picture are you looking for??")
+if (!args[0]) return reply("Wʜᴀᴛ ᴘɪᴄᴛᴜʀᴇ ᴀʀᴇ ʏᴏᴜ ʟᴏᴏᴋɪɴɢ ғᴏʀ??")
 let gis = require('g-i-s')
 gis(args.join(" "), async (error, result) => {
 n = result
 images = n[Math.floor(Math.random() * n.length)].url
-caption: `*| GOOGLE IMAGE |*
+let buttons = [
+{buttonId: `gimage ${args.join(" ")}`, buttonText: {displayText: 'Nᴇxᴛ Iᴍᴀɢᴇ'}, type: 1}
+]
+let buttonMessage = {
+image: { url: images },
+caption: `*Gᴏᴏɢʟᴇ Iᴍᴀɢᴇ*
 
-${global.themeemoji} Query : ${text}
-${global.themeemoji} Media Url : ${images}`,
+${global.themeemoji} _Qᴜᴇʀʏ : ${text}_
+${global.themeemoji} _Mᴇᴅɪᴀ Uʀʟ : ${images}_`,
 footer: `${global.botname}`,
+buttons: buttons,
 headerType: 4,
 contextInfo:{externalAdReply:{
 title:`${global.ownername}`,
@@ -5541,7 +5547,7 @@ mediaUrl: `${global.websitex}`,
 sourceUrl: `{global.websitex}`
 }}
 }
-AMRUSIR.sendMessage(m.chat, buttonMessage, { quoted: m })
+LizaMwolBotInc.sendMessage(m.chat, buttonMessage, { quoted: m })
 })
 }
 break
