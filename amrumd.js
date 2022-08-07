@@ -5518,7 +5518,7 @@ reply(teks)
 })
 }
 break
-case 'gimage': case 'googleimage': {
+case 'img': case 'googleimage': {
    if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
 if (!args[0]) return reply("What picture are you looking for??")
@@ -5526,17 +5526,12 @@ let gis = require('g-i-s')
 gis(args.join(" "), async (error, result) => {
 n = result
 images = n[Math.floor(Math.random() * n.length)].url
-let buttons = [
-{buttonId: `gimage ${args.join(" ")}`, buttonText: {displayText: 'Next Image 👀'}, type: 1}
-]
-let buttonMessage = {
 image: { url: images },
 caption: `*| GOOGLE IMAGE |*
 
 ${global.themeemoji} Query : ${text}
 ${global.themeemoji} Media Url : ${images}`,
 footer: `${global.botname}`,
-buttons: buttons,
 headerType: 4,
 contextInfo:{externalAdReply:{
 title:`${global.ownername}`,
