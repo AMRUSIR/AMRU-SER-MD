@@ -1726,6 +1726,25 @@ if (isBanChat) return reply(mess.banChat)
 		await AMRUSIR.updateBlockStatus(users, 'block').then((res) => reply(jsonformat(res))).catch((err) => reply(jsonformat(err)))
 	}
 	break
+	      case 'autoblock': {
+    if (!isCreator) throw mess.owner
+    if (args[0] === "on") {
+    if (db.settings[botNumber].autoblock) return reply(`*Autoblock already on okay*`)
+    db.settings[botNumber].autoblock = true
+    reply(`*Autoblock on*`)
+    } else if (args[0] === "off") {
+    if (!db.settings[botNumber].autoblock) return reply(`*Autoblock Already off okay*`)
+    db.settings[botNumber].autoblock = false
+    reply(`*Autoblock off*`)
+    } else {
+     let drips = [
+    { buttonId: `${command} on`, buttonText: { displayText: 'ON' }, type: 1 },
+    { buttonId: `${command} off`, buttonText: { displayText: 'OFF' }, type: 1 }
+      ]
+      await AMRUSIRsendButtonText(m.chat, drips, `*▊▊ _AUTOBLOCK_ ▊▊*`, AMRUSIRuser.name, m)
+    }
+      } 
+  break    
         case 'unblock': {
         	if (isBan) return reply(mess.ban)	 			
 if (isBanChat) return reply(mess.banChat)
