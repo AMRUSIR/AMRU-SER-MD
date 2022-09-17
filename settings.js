@@ -31,23 +31,23 @@ global.doc5 = 'application/pdf'
 global.doc6 = 'application/vnd.android.package-archive'
 
 //owmner v card
-global.vcardowner = ['919895802105'] //ur owner number
-global.ownername = "AMRUSER" //ur owner name
-global.ytname = "YT: DRON" //ur yt chanel name
-global.socialm = "GitHub: AMRUSIR" //ur github or insta name
-global.location = "India, Kerala, Kottayam" //ur location
+global.vcardowner = ['916282984554'] //ur owner number
+global.ownername = "ALBIN" //ur owner name
+global.ytname = "YT: BLUZ" //ur yt chanel name
+global.socialm = "GitHub: Albinbluz" //ur github or insta name
+global.location = "India, Kerala, Thiruvalla" //ur location
 
 //bot bomdy 
-global.owner = ['919895802105']
-global.ownertag = '919895802105' //ur tag number
-global.botname = 'AMRU-SER-MD' //ur bot name
+global.owner = ['917012167370']
+global.ownertag = '916282984554' //ur tag number
+global.botname = 'ɪᴛꜱᴍᴇꜱᴏʟᴏ💙' //ur bot name
 global.linkz = "" //your theme url which will be displayed on whatsapp
 global.websitex = "" //ur website to be displayed
 global.botscript = 'https://github.com/AMRUSIR/AMRU-SER-MD' //script link
 global.reactmoji = "🙂" //ur menu react emoji
 global.themeemoji = "😈" //ur theme emoji
-global.packname = "AMRU-SER" //ur sticker watermark packname
-global.author = "AMRU-SER-MD" //ur sticker watermark author
+global.packname = "ɪᴛꜱᴍᴇꜱᴏʟᴏ💙" //ur sticker watermark packname
+global.author = "ɪᴛꜱᴍᴇꜱᴏʟᴏ💙" //ur sticker watermark author
 
 //Bot theme media
 global.thum = fs.readFileSync("./XeonMedia/theme/cheemspic.jpg") //ur thumb pic
